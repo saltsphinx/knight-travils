@@ -11,6 +11,34 @@ What’s the desired output?
 The shortest path to the desired coordinate or vertex on the graph
 
 Given your inputs, what are the steps necessary to return the desired output?
+Create files knight, board, main and coordinate.rb,
+Create the Coordinate class,
+in the initialize method, accept an array as the parameter,
+Declare @neighbours variable and assign it an empty array,
+Create the Board class,
+Declare @@moves variable, give it an array of knight's possible moves,
+Create #initialize method, accept integer as parameter, default to 8,
+Declare @origin variable, instantiate Coordinate object and pass it the coordinate array [1, 1],
+Call #generate method and pass it an array with @orgin as its item,
+Create #calculate method, accept coordinate array and move array as parameters,
+Added the first items of both arrays together then the second items and return the result,
+Create #legal_move? method, accept position array as parameter,
+If any of the numbers in the new array are less than 1 or more than 8, return false,
+else return true,
+Create #generate variable, accept queue array of coordinate as parameter,
+#generate is a recusive method,
+Base case: Queue array is empty,
+Declare vertex variable, assign it the queue arrays first item using #shift,
+(The rules are simple. A move can't land on a coordinate poisiton thats less than 1 or more than 8.),
+Call #each method of @@moves, assign items to move block variable,
+Declare coordinate variable, and assign it the return value of calling #calculate, pass it the Coordinate's position array and move array,
+Call #legal_move?, and pass it coordinate variable
+If true then call #search method and assign its return value to neighbour variable,
+If neighbour variable isn't nil, #push it to vertex's neighbours array and do the same to neighbour,
+Else instantiate Coordinate object and pass it coordinate variable and assign it to the neighbour variable,
+#push it to vertex's neighbours array and do the same to neighbour,
+#unshift neighbour to queue,
+Call #generate on first item of queue and pass it the queue,
 ________________________________________________________________________________________________________________________________________________________________________________
 Ideas:
 Board rule and knight's possible movements
