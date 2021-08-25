@@ -1,0 +1,50 @@
+1. Put together a script that creates a game board and a knight.
+2. Treat all possible moves the knight could make as children in a tree. Don’t allow any moves to go off the board.
+3. Decide which search algorithm is best to use for this case. Hint: one of them could be a potentially infinite series.
+3. Use the chosen search algorithm to find the shortest path between the starting square (or node) and the ending square. Output what that full path looks like, e.g.:
+  > knight_moves([3,3],[4,3])
+  => You made it in 3 moves!  Here's your path:
+    [3,3]
+    [4,5]
+    [2,4]
+    [4,3]
+______________________________________________________________________________________________________________________________________________________________________________
+Does your program have a user interface? What will it look like? What functionality will the interface have? Sketch this out on paper.
+No user interface, there will only be output from the main.rb file to the console.
+
+What inputs will your program have? Will the user enter data or will you get input from somewhere else?
+Arrays representing coordinates on an (x, y) graph, the inputs will come from the main.rb file.
+
+What’s the desired output?
+Text to the console, displaying array literals of the positions along the way, from the starting square to the last square
+
+Given your inputs, what are the steps necessary to return the desired output?
+Create board and node classes
+In node class, for #initialize, accept an array as parameter called position
+Declare @neighbours variable, pass it an empty array
+Declare @passes variable, pass it 0
+In board class, create initialize method
+Declare @orgin variable, instantiate Node object and pass it [1, 1]
+Call #generate method, which will create the other 63 node objects, representing the squares on an 8x8 chess board, where each of their neighbours are a knight's move away
+Its only purpose is generate nodes. It will accept a single parameter, a queue, and generate and add to the first node's @neighbours, adding nodes that dont exist to the queue
+Create #generate method, accept a queue of nodes as the parameter,
+Create @@moves variable, pass it knight's moves
+in #generate, base case returns nil if queue is empty
+Declare node variable and pass it first item of queue with #shift
+call #each method on @@moves
+Create #calculate method, accept position and move as parameters
+return sum of two arrays
+In generate's each method, declare new_position variable, pass it result of calculate
+Create #legal_move? method, accept new position as parameter
+check if position is within bounds of board, if not return false else true
+In generate's each method, call next keyword if #legal_move returns false
+Create #search_tree method, accept queue full of nodes and new_position as parameter
+node variable = queue.shift
+If node is equal to the origin node, increase @passes by 1
+Check if node is equal to position, return node if so
+Declare new_queue array
+call each method on node.neighbours
+
+The problem:
+
+When generate is on a node, call #each method on moves array, and search through tree for node thats found from the move
