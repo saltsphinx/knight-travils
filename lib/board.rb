@@ -78,6 +78,7 @@ class Board
     return path.push(position) if node.position == position
     node.neighbours.each do |neighbour|
       if neighbour.position == position
+        queue = []
         path.push(position)
         return path.push(node.position)
       end
@@ -86,7 +87,7 @@ class Board
     queue += queue_plus
     visited.push(node)
     path = search_path(queue, position, visited, path)
-    path.push(node.position)  unless path.empty?
+    path.push(node.position) unless path.empty?
   end
 
   def calculate(position, move)
@@ -101,7 +102,7 @@ class Board
   def knight_move(start, last)
     path = search_path([search([origin], start)], last)
     return 'empty path' if path.class != Array || path.empty? 
-    puts "You made it in #{path.length} moves! Here's your path:"
+    puts "You made it in #{path.size} moves! Here's your path:"
     path.each {|position| p position}
   end
 end
