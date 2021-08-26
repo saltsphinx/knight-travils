@@ -5,9 +5,7 @@ class Node
     @neighbours = []
   end
 
-  def display
-    puts "for #{position}"
+  def neighbour_positions
     p neighbours.map {|node| node.position}
-    puts "\n"
   end
 end

@@ -45,6 +45,19 @@ Check if node is equal to position, return node if so
 Declare new_queue array
 call each method on node.neighbours
 
+For #search_tree, search_path(queue, position, visited = [], path = [])
+base case : return path if queue.empty?
+node = queue.shift
+if node == position, push position to path array and return
+node.neighbours.each
+if neighbour.position == position, push position to path, push node.position to path, return
+else, continue
+queue_plus = node.neighbours.each, if neighbour appears in visited dont return to queue_plus
+queue += queue_plus
+visited.push node position
+path = search_path(queue, position, visited)
+path.push(node.position) unless path.empty?
 The problem:
 
 When generate is on a node, call #each method on moves array, and search through tree for node thats found from the move
+Find a way to create the path. Ou

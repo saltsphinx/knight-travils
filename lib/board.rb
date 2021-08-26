@@ -45,6 +45,7 @@ class Board
     search(queue, position, visited)
   end
 
+=begin
   def search_path(queue, position, la = nil, visited = [], path = [])
     return if queue.empty?
     node = queue.shift
@@ -60,21 +61,22 @@ class Board
     visited.push(node)
     search_path(queue, position, visited, path)
   end
+=end
 
   def search_path(queue, position, visited = [], path = [])
-    return if queue.empty?
+    return path if queue.empty?
     node = queue.shift
-    return node if node.position == position
+    return path.push(position) if node.position == position
     node.neighbours.each do |neighbour|
       if neighbour.position == position
-        path.push(neighbour.position)
+        path.push(position)
+        return path.push(node.position)
       end
     end
-    queue += new_queue
-    visited.push(node)
-    search_path(queue, position, visited)
-    path.push(node) unless path.empty?
-    path
+    queue_plus = node.neighbour_positions.filter {|position| true unless visited.include?(position)}
+    visited.push(node.position)
+    path = search_path(queue, position, visited)
+
   end
 
   def calculate(position, move)
@@ -88,6 +90,7 @@ class Board
 
   def knight_move(start, last)
     path = search_path([search([origin], start)], last, 1)
+    return 'empty path' if path.class != Array || path.empty? 
     puts "You made it in #{path.length} moves! Here's your path:"
     path.each {|position| p position}
   end
