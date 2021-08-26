@@ -15,24 +15,33 @@ class Board
     return if queue.empty?
     node = queue.shift
     @@moves.each do |move|
-      new_position = calculate(node.position, move)
-      next unless legal_move?(new_position)
-      square = search([origin], new_position)
-      if square
-        node.neighbours.push(square)
-        node.neighbours.uniq!
-        square.neighbours.push(node)
-        square.neighbours.uniq!
-      else
-        square = Node.new(new_position)
-        queue.push(square)
-        node.neighbours.push(square)
-        node.neighbours.uniq!
-        square.neighbours.push(node)
-        square.neighbours.uniq!
-      end
+      square = generate_move(node, move)
+      queue.push(square) if square.is_a?(Node)
     end
     generate(queue)
+  end
+
+  def generate_move(node, move)
+    new_position = calculate(node.position, move)
+    return unless legal_move?(new_position)
+    square = search([origin], new_position)
+    square ? square_assign(node, square) : square_generate(node, new_position)
+  end
+
+  def square_assign(node, square)
+    node.neighbours.push(square)
+    node.neighbours.uniq!
+    square.neighbours.push(node)
+    square.neighbours.uniq!
+  end
+
+  def square_generate(node, position)
+    square = Node.new(position)
+    node.neighbours.push(square)
+    node.neighbours.uniq!
+    square.neighbours.push(node)
+    square.neighbours.uniq!
+    square
   end
 
   def search(queue, position, visited = [])
@@ -73,10 +82,11 @@ class Board
         return path.push(node.position)
       end
     end
-    queue_plus = node.neighbour_positions.filter {|position| true unless visited.include?(position)}
-    visited.push(node.position)
-    path = search_path(queue, position, visited)
-
+    queue_plus = node.neighbours.filter {|node| true unless visited.include?(node)}
+    queue += queue_plus
+    visited.push(node)
+    path = search_path(queue, position, visited, path)
+    path.push(node.position)  unless path.empty?
   end
 
   def calculate(position, move)
@@ -89,7 +99,7 @@ class Board
   end
 
   def knight_move(start, last)
-    path = search_path([search([origin], start)], last, 1)
+    path = search_path([search([origin], start)], last)
     return 'empty path' if path.class != Array || path.empty? 
     puts "You made it in #{path.length} moves! Here's your path:"
     path.each {|position| p position}

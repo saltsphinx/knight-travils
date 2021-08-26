@@ -6,6 +6,6 @@ class Node
   end
 
   def neighbour_positions
-    p neighbours.map {|node| node.position}
+    neighbours.map {|node| node.position}
   end
 end
