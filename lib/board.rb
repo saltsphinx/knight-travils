@@ -11,8 +11,8 @@ class Board
     generate([origin])
   end
 
-  def generate(queue, count = 1)
-    return puts count if queue.empty?
+  def generate(queue)
+    return if queue.empty?
     node = queue.shift
     @@moves.each do |move|
       new_position = calculate(node.position, move)
@@ -24,7 +24,6 @@ class Board
         square.neighbours.push(node)
         square.neighbours.uniq!
       else
-        count += 1
         square = Node.new(new_position)
         queue.push(square)
         node.neighbours.push(square)
@@ -33,7 +32,7 @@ class Board
         square.neighbours.uniq!
       end
     end
-    generate(queue, count)
+    generate(queue)
   end
 
   def search(queue, position, visited = [])
@@ -46,6 +45,38 @@ class Board
     search(queue, position, visited)
   end
 
+  def search_path(queue, position, la = nil, visited = [], path = [])
+    return if queue.empty?
+    node = queue.shift
+    path.push(node.position)
+    node.neighbours.each do |neighbour|
+      if neighbour.position == position
+        path.push(neighbour.position)
+        return path
+      end
+    end
+    new_queue = node.neighbours.filter {|node| true unless visited.include?(node)}
+    queue += new_queue
+    visited.push(node)
+    search_path(queue, position, visited, path)
+  end
+
+  def search_path(queue, position, visited = [], path = [])
+    return if queue.empty?
+    node = queue.shift
+    return node if node.position == position
+    node.neighbours.each do |neighbour|
+      if neighbour.position == position
+        path.push(neighbour.position)
+      end
+    end
+    queue += new_queue
+    visited.push(node)
+    search_path(queue, position, visited)
+    path.push(node) unless path.empty?
+    path
+  end
+
   def calculate(position, move)
     [position[0] + move[0], position[1] + move[1]]
   end
@@ -56,6 +87,8 @@ class Board
   end
 
   def knight_move(start, last)
-
+    path = search_path([search([origin], start)], last, 1)
+    puts "You made it in #{path.length} moves! Here's your path:"
+    path.each {|position| p position}
   end
 end

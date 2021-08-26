@@ -4,4 +4,10 @@ class Node
     @position = position
     @neighbours = []
   end
+
+  def display
+    puts "for #{position}"
+    p neighbours.map {|node| node.position}
+    puts "\n"
+  end
 end
