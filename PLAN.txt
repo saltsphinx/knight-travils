@@ -57,6 +57,16 @@ queue += queue_plus
 visited.push node position
 path = search_path(queue, position, visited)
 path.push(node.position) unless path.empty?
+
+Try to make a parent system, using a new search algorithm
+Also try to still use breadth first search
+For the current node, set its parent to nil
+For all of its neighbours, set their parent to current node
+After final node is found, set its parent to current node
+This method should return nothing
+Create a method that accepts the final node
+Go through all of the parents, add them to an array that will be returned until a nodes parent == nil
+
 The problem:
 
 When generate is on a node, call #each method on moves array, and search through tree for node thats found from the move

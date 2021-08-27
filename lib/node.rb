@@ -1,8 +1,9 @@
 class Node
-  attr_accessor :position, :neighbours, :passes
+  attr_accessor :position, :neighbours, :parent
   def initialize(position, passes = 0)
     @position = position
     @neighbours = []
+    @parent = nil
   end
 
   def neighbour_positions

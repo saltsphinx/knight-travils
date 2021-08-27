@@ -54,40 +54,39 @@ class Board
     search(queue, position, visited)
   end
 
-=begin
-  def search_path(queue, position, la = nil, visited = [], path = [])
-    return if queue.empty?
-    node = queue.shift
-    path.push(node.position)
-    node.neighbours.each do |neighbour|
-      if neighbour.position == position
-        path.push(neighbour.position)
-        return path
-      end
-    end
-    new_queue = node.neighbours.filter {|node| true unless visited.include?(node)}
-    queue += new_queue
-    visited.push(node)
-    search_path(queue, position, visited, path)
-  end
-=end
-
   def search_path(queue, position, visited = [], path = [])
     return path if queue.empty?
     node = queue.shift
+    p node.position
     return path.push(position) if node.position == position
     node.neighbours.each do |neighbour|
       if neighbour.position == position
-        queue = []
         path.push(position)
+        puts "found. #{path}"
         return path.push(node.position)
       end
     end
     queue_plus = node.neighbours.filter {|node| true unless visited.include?(node)}
     queue += queue_plus
     visited.push(node)
-    path = search_path(queue, position, visited, path)
-    path.push(node.position) unless path.empty?
+    path = search_path(queue, position, visited)
+    path.push(node.position) if path != []
+  end
+
+  def mark_parents(start, last)
+    start.parent = nil
+    queue = [start]
+    visited = []
+    until queue.empty?
+      node = queue.shift
+      visited << node
+      node.neighbours.each do |neighbour|
+        neighbour.parent = node unless visited.include?(neighbour)
+        break queue.clear if neighbour.position == last
+        queue << neighbour
+        visited << neighbour
+      end
+    end
   end
 
   def calculate(position, move)
@@ -95,14 +94,24 @@ class Board
   end
 
   def legal_move?(position)
-    return false if position[0] < 1 || position[1] < 1 || position[0] > 8 || position[1] > 8
-    true
+    position[0].between?(1, 8) && position[1].between?(1, 8)
+  end
+
+  def get_parents(node)
+    path = []
+    current = node
+    until current == nil
+      current
+      path << current.position
+      current = current.parent
+    end
+    path
   end
 
   def knight_move(start, last)
-    path = search_path([search([origin], start)], last)
-    return 'empty path' if path.class != Array || path.empty? 
-    puts "You made it in #{path.size} moves! Here's your path:"
-    path.each {|position| p position}
+    mark_parents(search([origin], start), last)
+    path =  get_parents(search([origin], last))
+    puts "You made it in #{path.size} moves! Heres your path:"
+    path.each {|n| p n}
   end
 end
